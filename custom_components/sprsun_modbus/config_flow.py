@@ -9,7 +9,6 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
 from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
     CONF_PROFILE,
@@ -49,7 +48,7 @@ class SprsunModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Return the options flow for this handler."""
         return SprsunModbusOptionsFlow(config_entry)
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> dict[str, Any]:
         """Handle the initial step."""
         if user_input is None:
             return self.async_show_form(step_id="user", data_schema=STEP_USER_DATA_SCHEMA)
@@ -70,7 +69,7 @@ class SprsunModbusOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         self.config_entry = config_entry
 
-    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> dict[str, Any]:
         """Manage the integration options."""
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
