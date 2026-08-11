@@ -60,7 +60,10 @@ class SprsunModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(f"{host}:{port}:{slave}")
         self._abort_if_unique_id_configured()
 
-        return self.async_create_entry(title=f"SPRSUN {host}:{port} (slave {slave})", data=user_input)
+        return self.async_create_entry(
+            title=f"SPRSUN Heat Pump ({host})",
+            data=user_input,
+        )
 
 
 class SprsunModbusOptionsFlow(config_entries.OptionsFlow):

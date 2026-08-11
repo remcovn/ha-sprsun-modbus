@@ -2,13 +2,13 @@
   "config": {
     "step": {
       "user": {
-        "title": "SPRSUN Modbus configureren",
-        "description": "Verbind met je SPRSUN warmtepomp via Modbus TCP.",
+        "title": "SPRSUN Modbus toevoegen",
+        "description": "Configureer een directe Modbus TCP-verbinding met je SPRSUN warmtepomp.",
         "data": {
-          "host": "Host",
+          "host": "Host of IP-adres",
           "port": "Poort",
           "slave": "Slave ID",
-          "scan_interval": "Basis scan-interval (seconden)",
+          "scan_interval": "Basis polling-interval (seconden)",
           "profile": "Polling-profiel"
         }
       }
@@ -18,12 +18,12 @@
     "step": {
       "init": {
         "title": "SPRSUN Modbus opties",
-        "description": "Stel verbinding en polling-gedrag verder af.",
+        "description": "Pas verbinding en polling-gedrag aan.",
         "data": {
-          "host": "Host",
+          "host": "Host of IP-adres",
           "port": "Poort",
           "slave": "Slave ID",
-          "scan_interval": "Basis scan-interval (seconden)",
+          "scan_interval": "Basis polling-interval (seconden)",
           "profile": "Polling-profiel"
         }
       }

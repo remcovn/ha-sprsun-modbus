@@ -2,13 +2,13 @@
   "config": {
     "step": {
       "user": {
-        "title": "Configure SPRSUN Modbus",
-        "description": "Connect to your SPRSUN heat pump over Modbus TCP.",
+        "title": "Add SPRSUN Modbus",
+        "description": "Configure a direct Modbus TCP connection to your SPRSUN heat pump.",
         "data": {
-          "host": "Host",
+          "host": "Host or IP address",
           "port": "Port",
           "slave": "Slave ID",
-          "scan_interval": "Base scan interval (seconds)",
+          "scan_interval": "Base polling interval (seconds)",
           "profile": "Polling profile"
         }
       }
@@ -17,13 +17,13 @@
   "options": {
     "step": {
       "init": {
-        "title": "SPRSUN Modbus options",
-        "description": "Tune connection and polling behavior.",
+        "title": "SPRSUN Modbus settings",
+        "description": "Adjust connection and polling behavior.",
         "data": {
-          "host": "Host",
+          "host": "Host or IP address",
           "port": "Port",
           "slave": "Slave ID",
-          "scan_interval": "Base scan interval (seconds)",
+          "scan_interval": "Base polling interval (seconds)",
           "profile": "Polling profile"
         }
       }

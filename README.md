@@ -1,67 +1,94 @@
-# SPRSUN Modbus Custom Integration (HACS)
+# SPRSUN Modbus Integration for Home Assistant
 
-Deze repository is de migratie van een package-gebaseerde Home Assistant setup naar een losse custom integratie voor SPRSUN Modbus.
+This custom integration allows you to read and control an SPRSUN heat pump from Home Assistant over Modbus TCP.
 
-## Huidige status
+It is designed for users who want local polling, Home Assistant entities, and direct control of key setpoints and operating mode.
 
-- Bronbestand uit bestaande HA instance aanwezig:
-  - configuration.yaml
-  - ha_package_sprsun_readonly.yaml
-- Migratiecontract en runbook toegevoegd in docs.
-- Registercatalogus v1 gegenereerd uit de package-bron.
-- Pymodbus runtime basis staat klaar:
-  - API-wrapper
-  - DataUpdateCoordinator
-  - Werkende sensor, number en select platformen
-- Read-parity uitgebreid: alle registers uit docs/register_catalog_v1.csv zijn opgenomen als sensor-definitie.
-- Native Unit Mode tekstsensor toegevoegd, zodat template-mapping niet meer nodig is.
-- Pollingprofielen toegevoegd (fast, balanced, conservative) met fijnmazige register-cadans.
-- Exponentiele reconnect/backoff toegevoegd op coordinator-niveau.
+## Proven Hardware Setup
 
-## Doel v1
+The tested and validated setup is based on:
 
-- Functionele parity met huidige package voor:
-  - Alle read-sensoren
-  - Write-functionaliteit voor setpoints en unit mode
-- Safety-regel op unit mode write:
-  - Alleen schrijven wanneer compressor frequentie <= 0
-- Nieuwe nette entity_ids zijn toegestaan.
+- SPRSUN CGK025V3L-B
+- Elfin EW11 RS485-to-IP converter
 
-## Hergebruik van HA Modbus
+## Modbus Register Source
 
-- Ja, hergebruik kan, maar in de praktijk gebruiken we in deze integratie een eigen Modbus laag via pymodbus.
-- Reden: stabiele controle over polling, entity-model, write-guards en foutafhandeling binnen 1 custom component.
-- We leunen dus niet op interne (niet-publieke) Python API's van de ingebouwde HA Modbus integratie.
+The Modbus register mapping in this project is based on community-shared information from this topic:
 
-## Belangrijke documenten
+- [Pompa ciepła SprSun Select CGK40V3L - Urządzenia / Klimatyzacja i ogrzewanie - ArturHome](https://forum.arturhome.pl/t/pompa-ciepla-sprsun-select-cgk40v3l/12596)
 
-- docs/migration_contract_v1.md
-- docs/register_catalog_v1.csv
-- docs/cutover_runbook.md
-- docs/entity_mapping_old_to_new.csv
-- docs/side_by_side_validation_template.csv
-- docs/write_validation_template.csv
+Always validate register behavior on your own unit before relying on write operations in production.
 
-## Installatie via HACS (custom repository)
+## What This Integration Provides
 
-1. Push deze repository naar GitHub.
-2. Maak een eerste release tag, bijvoorbeeld `v0.1.0`.
-3. Open HACS in Home Assistant.
-4. Kies `Custom repositories`.
-5. Voeg de GitHub URL toe met categorie `Integration`.
-6. Zoek op `SPRSUN Modbus` in HACS en installeer.
-7. Herstart Home Assistant.
-8. Ga naar `Instellingen` -> `Apparaten en diensten` -> `Integratie toevoegen`.
-9. Voeg `SPRSUN Modbus` toe en vul host, port, slave, scan interval en profile in.
+- Sensor entities for temperatures, pressures, power, fan speeds, status fields, and controller parameters
+- Number entities for writable setpoints and temperature deltas
+- Select entity for unit mode control
+- Config flow in Home Assistant UI (no YAML required)
+- Polling profiles (`fast`, `balanced`, `conservative`)
+- Connection resilience through retry and backoff
 
-## Release checklist (praktisch)
+## Requirements
 
-1. Controleer dat `manifest.json` en `hacs.json` correct zijn.
-2. Verhoog versie in `custom_components/sprsun_modbus/manifest.json` bij elke release.
-3. Werk changelog of release notes bij in GitHub.
-4. Maak en push een semver tag, bijvoorbeeld `v0.1.1`.
-5. Verifieer dat HACS de nieuwe release ziet.
+- Home Assistant (see minimum version in [hacs.json](hacs.json))
+- HACS installed
+- Network access from Home Assistant to your RS485-to-IP converter
+- Modbus TCP bridge configured and reachable (for example, Elfin EW11)
 
-## Volgende implementatiestap
+## Installation (HACS Custom Repository)
 
-1. Side-by-side validatie uitvoeren volgens docs/cutover_runbook.md als je later extra zekerheid wilt.
+1. Open HACS in Home Assistant.
+2. Go to Custom repositories.
+3. Add this repository URL as category Integration:
+   - `https://github.com/remcovn/ha-sprsun-modbus`
+4. Search for `SPRSUN Modbus` in HACS and install it.
+5. Restart Home Assistant.
+6. Go to Settings > Devices & Services > Add Integration.
+7. Select `SPRSUN Modbus` and complete setup.
+
+## Configuration Fields
+
+During setup, you will provide:
+
+- Host or IP address
+- Port
+- Slave ID
+- Base polling interval (seconds)
+- Polling profile (`fast`, `balanced`, `conservative`)
+
+## Typical Connection Notes (Elfin EW11)
+
+- Use Modbus TCP mode on the converter.
+- Ensure serial settings match the SPRSUN controller bus settings.
+- Confirm TCP port and slave ID are correct.
+- Make sure Home Assistant can reach the converter over the network.
+
+## Safety Notes
+
+- Unit mode changes are guarded in software and may be blocked while the compressor is running.
+- Wrong Modbus writes can impact heat pump behavior.
+- Start with read-only validation, then enable write actions carefully.
+
+## Troubleshooting
+
+If the integration does not load or setup fails:
+
+1. Update to the latest release in HACS.
+2. Restart Home Assistant after updating.
+3. Check Home Assistant logs for `sprsun_modbus` errors.
+4. Verify host, port, slave ID, and converter network connectivity.
+5. Confirm your converter is actually serving Modbus TCP data.
+
+## Useful Repository Files
+
+- [custom_components/sprsun_modbus/manifest.json](custom_components/sprsun_modbus/manifest.json)
+- [custom_components/sprsun_modbus/config_flow.py](custom_components/sprsun_modbus/config_flow.py)
+- [custom_components/sprsun_modbus/register_definitions.py](custom_components/sprsun_modbus/register_definitions.py)
+- [docs/register_catalog_v1.csv](docs/register_catalog_v1.csv)
+- [docs/cutover_runbook.md](docs/cutover_runbook.md)
+
+## Disclaimer
+
+This is a community project. Use it at your own risk.
+
+Modbus implementations and register behavior can vary between firmware revisions and heat pump models.
