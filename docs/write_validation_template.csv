@@ -1,0 +1,9 @@
+timestamp,test_case,input_value,expected_register,expected_raw_value,guard_condition,actual_register,actual_raw_value,result,notes
+2026-08-11T00:00:00Z,hot_water_setpoint,45.5,202,91,n/a,,,,
+2026-08-11T00:00:00Z,cooling_setpoint,18.0,203,36,n/a,,,,
+2026-08-11T00:00:00Z,heating_setpoint,35.0,204,70,n/a,,,,
+2026-08-11T00:00:00Z,heat_delta_temp,6,198,6,n/a,,,,
+2026-08-11T00:00:00Z,ac_constant_temp_diff,4,199,4,n/a,,,,
+2026-08-11T00:00:00Z,hot_water_delta_temp,5,200,5,n/a,,,,
+2026-08-11T00:00:00Z,unit_mode_to_heating,Heating,54,1,compressor_frequency<=0,,,,
+2026-08-11T00:00:00Z,unit_mode_blocked,Cooling,54,no_write,compressor_frequency>0,,,,

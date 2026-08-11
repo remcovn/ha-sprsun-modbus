@@ -1,0 +1,1234 @@
+# Home Assistant package file for SPRSUN read-only Modbus sensors.
+#
+# Recommended location in Home Assistant:
+#   /config/packages/sprsun_readonly.yaml
+#
+# Then enable packages in configuration.yaml with the snippet from:
+#   ha_configuration_packages_snippet.yaml
+
+modbus:
+  - name: sprsun
+    type: tcp
+    host: 192.168.1.50
+    port: 8899
+    timeout: 5
+    delay: 5
+
+    sensors:
+      # ---------------------------------------------------------------------
+      # Core temperatures (most useful day-to-day)
+      # ---------------------------------------------------------------------
+      - name: Inlet Temperature
+        slave: 1
+        address: 14
+        input_type: holding
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Outlet Temperature
+        slave: 1
+        address: 18
+        input_type: holding
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Ambient Temperature
+        slave: 1
+        address: 17
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Hot Water Temperature
+        slave: 1
+        address: 15
+        input_type: holding
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Suction Gas Temperature
+        slave: 1
+        address: 21
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Coil Temperature
+        slave: 1
+        address: 22
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Exhaust Temperature
+        slave: 1
+        address: 27
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Evaporator Temperature
+        slave: 1
+        address: 40
+        input_type: holding
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Condenser Temperature
+        slave: 1
+        address: 41
+        input_type: holding
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      # ---------------------------------------------------------------------
+      # Pressures
+      # ---------------------------------------------------------------------
+      - name: Suction Pressure
+        slave: 1
+        address: 47
+        input_type: holding
+        data_type: int16
+        scale: 0.01
+        precision: 2
+        unit_of_measurement: "bar"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Discharge Pressure
+        slave: 1
+        address: 48
+        input_type: holding
+        data_type: int16
+        scale: 0.01
+        precision: 2
+        unit_of_measurement: "bar"
+        state_class: measurement
+        scan_interval: 15
+
+      # ---------------------------------------------------------------------
+      # Actuator/operating indicators (still read-only)
+      # ---------------------------------------------------------------------
+      - name: EEV1 Opening Step
+        slave: 1
+        address: 28
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Compressor Frequency
+        slave: 1
+        address: 30
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "Hz"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Compressor Current
+        slave: 1
+        address: 35
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "A"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Compressor Target Frequency
+        slave: 1
+        address: 36
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "Hz"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Pump PWM
+        slave: 1
+        address: 46
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "%"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: DC Fan 1 Speed
+        slave: 1
+        address: 38
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "rpm"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: DC Fan 2 Speed
+        slave: 1
+        address: 39
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "rpm"
+        state_class: measurement
+        scan_interval: 15
+
+      # Inverter electrical telemetry.
+      # Direct Modbus read showed 333+ is static on this unit; 33-35 are dynamic.
+      - name: SPRSUN Input Power
+        slave: 1
+        address: 33
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        scan_interval: 15
+
+      - name: SPRSUN Inverter Voltage
+        slave: 1
+        address: 34
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "V"
+        device_class: voltage
+        state_class: measurement
+        scan_interval: 15
+
+      - name: SPRSUN Inverter Current
+        slave: 1
+        address: 35
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "A"
+        device_class: current
+        state_class: measurement
+        scan_interval: 15
+
+      # ---------------------------------------------------------------------
+      # Setpoints and offsets (read-only exposure, no climate control entities)
+      # ---------------------------------------------------------------------
+      - name: Heating Setpoint
+        slave: 1
+        address: 204
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Cooling Setpoint
+        slave: 1
+        address: 203
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Hot Water Setpoint
+        slave: 1
+        address: 202
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Heat Delta Temp
+        slave: 1
+        address: 198
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: AC Constant Temp Diff
+        slave: 1
+        address: 199
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Hot Water Delta Temp
+        slave: 1
+        address: 200
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: WT Constant Temp Diff
+        slave: 1
+        address: 201
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 30
+
+      # ---------------------------------------------------------------------
+      # Operational modes and pump tuning (read-only)
+      # ---------------------------------------------------------------------
+      - name: Unit Mode (P06)
+        slave: 1
+        address: 54
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      - name: DC Pump Mode (F13)
+        slave: 1
+        address: 390
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      - name: DC Pump Cycle (F14)
+        slave: 1
+        address: 391
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "s"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: DC Pump Freq Set (F15)
+        slave: 1
+        address: 392
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "%"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: DC Pump Max Freq (F16)
+        slave: 1
+        address: 393
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "%"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: DC Pump Min Freq (F17)
+        slave: 1
+        address: 394
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "%"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Pump Work Mode (G02)
+        slave: 1
+        address: 398
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      - name: WT Temp Calibration (F44)
+        slave: 1
+        address: 205
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Inlet Temp Calibration (F45)
+        slave: 1
+        address: 206
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Outlet Temp Calibration (F46)
+        slave: 1
+        address: 207
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: WT Temp Offset Setpoint (F49)
+        slave: 1
+        address: 208
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Comp Delay (G08)
+        slave: 1
+        address: 385
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "min"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Comp Delay (G06)
+        slave: 1
+        address: 386
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "min"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Hot Water Heater Ext (G07)
+        slave: 1
+        address: 387
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Heating Heater Ext (G05)
+        slave: 1
+        address: 388
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Start Internal (G03)
+        slave: 1
+        address: 389
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "min"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: DC Pump Scale Factor (F18)
+        slave: 1
+        address: 395
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: DC Pump Diff (F19)
+        slave: 1
+        address: 396
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: Delta Temp Set (G04)
+        slave: 1
+        address: 397
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Comp Freq Diff (F22)
+        slave: 1
+        address: 399
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: Enable Switch Amb Linkage (G09)
+        slave: 1
+        address: 401
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: Ambient Temp Switch Setpoint (G10)
+        slave: 1
+        address: 402
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Ambient Temp Diff (G11)
+        slave: 1
+        address: 403
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Limit Freq Temp Diff (F27)
+        slave: 1
+        address: 404
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Decrease Freq Temp Diff (F28)
+        slave: 1
+        address: 405
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Limit Freq Outlet Low (F29)
+        slave: 1
+        address: 406
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Decrease Freq Outlet Low (F30)
+        slave: 1
+        address: 407
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Limit Freq Outlet High (F31)
+        slave: 1
+        address: 408
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Decrease Freq Outlet High (F32)
+        slave: 1
+        address: 409
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Antifreeze Cycle (F35)
+        slave: 1
+        address: 415
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "min"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Three-way Valve Cycle (F36)
+        slave: 1
+        address: 416
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "hour"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Pump Cycle In Error (F37)
+        slave: 1
+        address: 417
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "min"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Comp Freq Cycle (F38)
+        slave: 1
+        address: 418
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "s"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: Air Too Low Setpoint (F41)
+        slave: 1
+        address: 419
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 30
+
+      - name: High Pressure Adjust (F47)
+        slave: 1
+        address: 434
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: Low Pressure Adjust (F48)
+        slave: 1
+        address: 435
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 60
+
+      - name: Air Too Low Diff (F51)
+        slave: 1
+        address: 436
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Outlet Temp Offset Setpoint (F53)
+        slave: 1
+        address: 438
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Outlet Temp Offset (F52)
+        slave: 1
+        address: 439
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Heat Upper Limit Setpoint (F54)
+        slave: 1
+        address: 440
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Cool Lower Limit Setpoint (F55)
+        slave: 1
+        address: 441
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "°C"
+        state_class: measurement
+        scan_interval: 60
+
+      - name: Model Selection (F56)
+        slave: 1
+        address: 442
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 300
+
+      # ---------------------------------------------------------------------
+      # Diagnostic/status fields (interpretation may vary by firmware)
+      # ---------------------------------------------------------------------
+      - name: Status Field A
+        slave: 1
+        address: 209
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 15
+
+      - name: Protection Code
+        slave: 1
+        address: 210
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 15
+
+      - name: Suction Superheat
+        slave: 1
+        address: 211
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        unit_of_measurement: "K"
+        state_class: measurement
+        scan_interval: 15
+
+      - name: Defrost Field 1
+        slave: 1
+        address: 215
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      - name: Defrost Field 2
+        slave: 1
+        address: 216
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      - name: Defrost Field 3
+        slave: 1
+        address: 217
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 30
+
+      # ---------------------------------------------------------------------
+      # Firmware IDs
+      # ---------------------------------------------------------------------
+      - name: Controller Version
+        slave: 1
+        address: 44
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 120
+
+      - name: Display Version
+        slave: 1
+        address: 45
+        input_type: holding
+        data_type: int16
+        scale: 1
+        precision: 0
+        scan_interval: 120
+
+template:
+  - sensor:
+      - name: Unit Mode (P06) Text
+        icon: mdi:hvac
+        state: >
+          {% set raw = states.sensor
+            | selectattr('name', 'eq', 'Unit Mode (P06)')
+            | map(attribute='state')
+            | first %}
+          {% if raw in ['unknown', 'unavailable', 'none', ''] %}
+            unknown
+          {% else %}
+            {% set v = raw | int(-1) %}
+            {% if v == 0 %}DHW
+            {% elif v == 1 %}Heating
+            {% elif v == 2 %}Cooling
+            {% elif v == 3 %}Heating + DHW
+            {% elif v == 4 %}Cooling + DHW
+            {% else %}Unknown ({{ raw }})
+            {% endif %}
+          {% endif %}
+
+      - name: Pump Work Mode (G02) Text
+        icon: mdi:pump
+        state: >
+          {% set raw = states.sensor
+            | selectattr('name', 'eq', 'Pump Work Mode (G02)')
+            | map(attribute='state')
+            | first %}
+          {% if raw in ['unknown', 'unavailable', 'none', ''] %}
+            unknown
+          {% else %}
+            {% set v = raw | int(-1) %}
+            {% if v == 0 %}Interval
+            {% elif v == 1 %}Normal
+            {% elif v == 2 %}Demand
+            {% else %}Unknown ({{ raw }})
+            {% endif %}
+          {% endif %}
+
+      - name: Ambient Linkage Enable (G09) Text
+        icon: mdi:link-variant
+        state: >
+          {% set raw = states.sensor
+            | selectattr('name', 'eq', 'Enable Switch Amb Linkage (G09)')
+            | map(attribute='state')
+            | first %}
+          {% if raw in ['unknown', 'unavailable', 'none', ''] %}
+            unknown
+          {% else %}
+            {% set v = raw | int(-1) %}
+            {% if v == 0 %}Disabled (No linkage)
+            {% elif v == 1 %}Enabled (Ambient linkage)
+            {% else %}Unknown ({{ raw }})
+            {% endif %}
+          {% endif %}
+
+      - name: DC Pump Mode (F13) Text
+        icon: mdi:pump
+        state: >
+          {% set raw = states.sensor
+            | selectattr('name', 'eq', 'DC Pump Mode (F13)')
+            | map(attribute='state')
+            | first %}
+          {% if raw in ['unknown', 'unavailable', 'none', ''] %}
+            unknown
+          {% else %}
+            {% set v = raw | int(-1) %}
+            {% if v == 0 %}Manual
+            {% elif v == 1 %}Auto
+            {% else %}Unknown ({{ raw }})
+            {% endif %}
+          {% endif %}
+
+input_number:
+  sprsun_hot_water_setpoint:
+    name: SPRSUN Hot Water Setpoint
+    min: 30
+    max: 60
+    step: 0.5
+    mode: box
+    unit_of_measurement: "°C"
+  sprsun_cooling_setpoint:
+    name: SPRSUN Cooling Setpoint
+    min: 7
+    max: 30
+    step: 0.5
+    mode: box
+    unit_of_measurement: "°C"
+  sprsun_heating_setpoint:
+    name: SPRSUN Heating Setpoint
+    min: 20
+    max: 55
+    step: 0.5
+    mode: box
+    unit_of_measurement: "°C"
+  sprsun_heat_delta_temp:
+    name: SPRSUN Heat Delta Temp
+    min: 1
+    max: 20
+    step: 1
+    mode: box
+    unit_of_measurement: "°C"
+  sprsun_ac_constant_temp_diff:
+    name: SPRSUN AC Constant Temp Diff
+    min: 1
+    max: 20
+    step: 1
+    mode: box
+    unit_of_measurement: "°C"
+  sprsun_hot_water_delta_temp:
+    name: SPRSUN Hot Water Delta Temp
+    min: 1
+    max: 20
+    step: 1
+    mode: box
+    unit_of_measurement: "°C"
+
+input_select:
+  sprsun_unit_mode:
+    name: SPRSUN Unit Mode
+    options:
+      - DHW
+      - Heating
+      - Cooling
+      - Heating + DHW
+      - Cooling + DHW
+
+automation:
+  - id: sprsun_sync_write_helpers
+    alias: SPRSUN - Sync write helpers from Modbus sensors
+    mode: restart
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time_pattern
+        minutes: "/2"
+    action:
+      - variables:
+          hot_water_setpoint: >
+            {{ states.sensor | selectattr('name', 'eq', 'Hot Water Setpoint') | map(attribute='state') | first }}
+          cooling_setpoint: >
+            {{ states.sensor | selectattr('name', 'eq', 'Cooling Setpoint') | map(attribute='state') | first }}
+          heating_setpoint: >
+            {{ states.sensor | selectattr('name', 'eq', 'Heating Setpoint') | map(attribute='state') | first }}
+          heat_delta_temp: >
+            {{ states.sensor | selectattr('name', 'eq', 'Heat Delta Temp') | map(attribute='state') | first }}
+          ac_const_temp_diff: >
+            {{ states.sensor | selectattr('name', 'eq', 'AC Constant Temp Diff') | map(attribute='state') | first }}
+          hot_water_delta_temp: >
+            {{ states.sensor | selectattr('name', 'eq', 'Hot Water Delta Temp') | map(attribute='state') | first }}
+          unit_mode_raw: >
+            {{ states.sensor | selectattr('name', 'eq', 'Unit Mode (P06)') | map(attribute='state') | first }}
+      - if:
+          - condition: template
+            value_template: "{{ hot_water_setpoint not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_hot_water_setpoint
+            data:
+              value: "{{ hot_water_setpoint | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ cooling_setpoint not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_cooling_setpoint
+            data:
+              value: "{{ cooling_setpoint | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ heating_setpoint not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_heating_setpoint
+            data:
+              value: "{{ heating_setpoint | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ heat_delta_temp not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_heat_delta_temp
+            data:
+              value: "{{ heat_delta_temp | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ ac_const_temp_diff not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_ac_constant_temp_diff
+            data:
+              value: "{{ ac_const_temp_diff | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ hot_water_delta_temp not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_number.set_value
+            target:
+              entity_id: input_number.sprsun_hot_water_delta_temp
+            data:
+              value: "{{ hot_water_delta_temp | float }}"
+      - if:
+          - condition: template
+            value_template: "{{ unit_mode_raw not in ['unknown', 'unavailable', 'none', ''] }}"
+        then:
+          - service: input_select.select_option
+            target:
+              entity_id: input_select.sprsun_unit_mode
+            data:
+              option: >
+                {% set v = unit_mode_raw | int(-1) %}
+                {% if v == 0 %}DHW
+                {% elif v == 1 %}Heating
+                {% elif v == 2 %}Cooling
+                {% elif v == 3 %}Heating + DHW
+                {% elif v == 4 %}Cooling + DHW
+                {% else %}DHW
+                {% endif %}
+
+  - id: sprsun_write_hot_water_setpoint
+    alias: SPRSUN - Write hot water setpoint (reg 202)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_hot_water_setpoint
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 202
+          value: "{{ (trigger.to_state.state | float * 2) | round(0) | int }}"
+
+  - id: sprsun_write_cooling_setpoint
+    alias: SPRSUN - Write cooling setpoint (reg 203)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_cooling_setpoint
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 203
+          value: "{{ (trigger.to_state.state | float * 2) | round(0) | int }}"
+
+  - id: sprsun_write_heating_setpoint
+    alias: SPRSUN - Write heating setpoint (reg 204)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_heating_setpoint
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 204
+          value: "{{ (trigger.to_state.state | float * 2) | round(0) | int }}"
+
+  - id: sprsun_write_heat_delta_temp
+    alias: SPRSUN - Write heat delta temp (reg 198)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_heat_delta_temp
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 198
+          value: "{{ trigger.to_state.state | float | round(0) | int }}"
+
+  - id: sprsun_write_ac_constant_temp_diff
+    alias: SPRSUN - Write AC constant temp diff (reg 199)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_ac_constant_temp_diff
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 199
+          value: "{{ trigger.to_state.state | float | round(0) | int }}"
+
+  - id: sprsun_write_hot_water_delta_temp
+    alias: SPRSUN - Write hot water delta temp (reg 200)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_number.sprsun_hot_water_delta_temp
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+    action:
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 200
+          value: "{{ trigger.to_state.state | float | round(0) | int }}"
+
+  - id: sprsun_write_unit_mode_p06
+    alias: SPRSUN - Write unit mode P06 (reg 54)
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_select.sprsun_unit_mode
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state is not none and trigger.from_state is not none and trigger.to_state.state != trigger.from_state.state }}"
+      - condition: template
+        value_template: >
+          {% set f = states.sensor | selectattr('name', 'eq', 'Compressor Frequency') | map(attribute='state') | first %}
+          {{ f not in ['unknown', 'unavailable', 'none', ''] and (f | float(0)) <= 0 }}
+    action:
+      - variables:
+          raw_mode: >
+            {% if trigger.to_state.state == 'DHW' %}0
+            {% elif trigger.to_state.state == 'Heating' %}1
+            {% elif trigger.to_state.state == 'Cooling' %}2
+            {% elif trigger.to_state.state == 'Heating + DHW' %}3
+            {% elif trigger.to_state.state == 'Cooling + DHW' %}4
+            {% else %}0
+            {% endif %}
+      - service: modbus.write_register
+        data:
+          hub: sprsun
+          slave: 1
+          address: 54
+          value: "{{ raw_mode | int }}"

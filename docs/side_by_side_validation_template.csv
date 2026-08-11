@@ -1,0 +1,9 @@
+timestamp,metric,old_entity_id,new_entity_id,old_value,new_value,abs_delta,tolerance,status,notes
+2026-08-11T00:00:00Z,inlet_temperature,,,,,,0.5C,,
+2026-08-11T00:00:00Z,outlet_temperature,,,,,,0.5C,,
+2026-08-11T00:00:00Z,ambient_temperature,,,,,,0.5C,,
+2026-08-11T00:00:00Z,compressor_frequency,,,,,,1Hz,,
+2026-08-11T00:00:00Z,compressor_or_inverter_current,,,,,,1A,,
+2026-08-11T00:00:00Z,pump_pwm,,,,,,2%,,
+2026-08-11T00:00:00Z,input_power,,,,,,150W,,
+2026-08-11T00:00:00Z,unit_mode,,,,,,exact,,

@@ -1,0 +1,256 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+homeassistant:
+  packages: !include_dir_named packages
+
+# Template sensors
+template:
+  - sensor:
+      - name: "Grid Status"
+        unique_id: grid_import_export_status
+        state: >
+          {% set power = states('sensor.energiemeter_huidig_stroomverbruik') | float(0) %}
+          {% if power > 0 %}
+            Importing
+          {% elif power < 0 %}
+            Exporting
+          {% else %}
+            Balanced
+          {% endif %}
+        icon: >
+          {% set power = states('sensor.energiemeter_huidig_stroomverbruik') | float(0) %}
+          {% if power > 0 %}
+            mdi:transmission-tower-import
+          {% elif power < 0 %}
+            mdi:transmission-tower-export
+          {% else %}
+            mdi:transmission-tower
+          {% endif %}
+
+      - name: "Woonkamer Dauwpunt"
+        unique_id: klimaat_woonkamer_dauwpunt
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        availability: >
+          {{
+            states('sensor.klimaat_woonkamer_temperatuur') not in ['unknown', 'unavailable', 'none', '']
+            and states('sensor.klimaat_woonkamer_luchtvochtigheid') not in ['unknown', 'unavailable', 'none', '']
+          }}
+        state: >
+          {% set t = states('sensor.klimaat_woonkamer_temperatuur') | float %}
+          {% set rv = states('sensor.klimaat_woonkamer_luchtvochtigheid') | float %}
+          {% set alpha = ((rv / 100) | log) + ((17.62 * t) / (243.12 + t)) %}
+          {{ ((243.12 * alpha) / (17.62 - alpha)) | round(1) }}
+
+      - name: "Woonkamer Dauwpunt Gevoel"
+        unique_id: klimaat_woonkamer_dauwpunt_gevoel
+        icon: mdi:weather-hazy
+        state: >
+          {% set dp = states('sensor.woonkamer_dauwpunt') | float(none) %}
+          {% if dp is none %}
+            onbekend
+          {% elif dp < 10 %}
+            fris
+          {% elif dp < 15 %}
+            comfortabel
+          {% elif dp < 18 %}
+            wat vochtig
+          {% elif dp < 20 %}
+            benauwd
+          {% else %}
+            echt broeierig
+          {% endif %}
+
+      - name: "Slaapkamer Dauwpunt"
+        unique_id: klimaat_slaapkamer_dauwpunt
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        availability: >
+          {{
+            states('sensor.klimaat_slaapkamer_temperatuur') not in ['unknown', 'unavailable', 'none', '']
+            and states('sensor.klimaat_slaapkamer_luchtvochtigheid') not in ['unknown', 'unavailable', 'none', '']
+          }}
+        state: >
+          {% set t = states('sensor.klimaat_slaapkamer_temperatuur') | float %}
+          {% set rv = states('sensor.klimaat_slaapkamer_luchtvochtigheid') | float %}
+          {% set alpha = ((rv / 100) | log) + ((17.62 * t) / (243.12 + t)) %}
+          {{ ((243.12 * alpha) / (17.62 - alpha)) | round(1) }}
+
+      - name: "Slaapkamer Dauwpunt Gevoel"
+        unique_id: klimaat_slaapkamer_dauwpunt_gevoel
+        icon: mdi:weather-hazy
+        state: >
+          {% set dp = states('sensor.slaapkamer_dauwpunt') | float(none) %}
+          {% if dp is none %}
+            onbekend
+          {% elif dp < 10 %}
+            fris
+          {% elif dp < 15 %}
+            comfortabel
+          {% elif dp < 18 %}
+            wat vochtig
+          {% elif dp < 20 %}
+            benauwd
+          {% else %}
+            echt broeierig
+          {% endif %}
+
+      - name: "Keuken Dauwpunt"
+        unique_id: klimaat_keuken_dauwpunt
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        availability: >
+          {{
+            states('sensor.keuken_sonoff_100287214c_temperature') not in ['unknown', 'unavailable', 'none', '']
+            and states('sensor.klimaat_woonkamer_luchtvochtigheid') not in ['unknown', 'unavailable', 'none', '']
+          }}
+        state: >
+          {% set t = states('sensor.keuken_sonoff_100287214c_temperature') | float %}
+          {% set rv = states('sensor.klimaat_woonkamer_luchtvochtigheid') | float %}
+          {% set alpha = ((rv / 100) | log) + ((17.62 * t) / (243.12 + t)) %}
+          {{ ((243.12 * alpha) / (17.62 - alpha)) | round(1) }}
+
+      - name: "Keuken Dauwpunt Gevoel"
+        unique_id: klimaat_keuken_dauwpunt_gevoel
+        icon: mdi:weather-hazy
+        state: >
+          {% set dp = states('sensor.keuken_dauwpunt') | float(none) %}
+          {% if dp is none %}
+            onbekend
+          {% elif dp < 10 %}
+            fris
+          {% elif dp < 15 %}
+            comfortabel
+          {% elif dp < 18 %}
+            wat vochtig
+          {% elif dp < 20 %}
+            benauwd
+          {% else %}
+            echt broeierig
+          {% endif %}
+
+      - name: "Buiten Luchtvochtigheid"
+        unique_id: klimaat_buiten_luchtvochtigheid
+        unit_of_measurement: "%"
+        device_class: humidity
+        state_class: measurement
+        availability: >
+          {{ state_attr('weather.buienradar', 'humidity') is not none }}
+        state: >
+          {{ state_attr('weather.buienradar', 'humidity') | float(0) | round(1) }}
+
+      - name: "Buiten Temperatuur"
+        unique_id: klimaat_buiten_temperatuur
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        availability: >
+          {{ state_attr('weather.buienradar', 'temperature') is not none }}
+        state: >
+          {{ state_attr('weather.buienradar', 'temperature') | float(0) | round(1) }}
+
+      - name: "Buiten Dauwpunt"
+        unique_id: klimaat_buiten_dauwpunt
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        availability: >
+          {{
+            states('sensor.buiten_temperatuur') not in ['unknown', 'unavailable', 'none', '']
+            and states('sensor.buiten_luchtvochtigheid') not in ['unknown', 'unavailable', 'none', '']
+          }}
+        state: >
+          {% set t = states('sensor.buiten_temperatuur') | float %}
+          {% set rv = states('sensor.buiten_luchtvochtigheid') | float %}
+          {% set alpha = ((rv / 100) | log) + ((17.62 * t) / (243.12 + t)) %}
+          {{ ((243.12 * alpha) / (17.62 - alpha)) | round(1) }}
+
+      - name: "Buiten Dauwpunt Gevoel"
+        unique_id: klimaat_buiten_dauwpunt_gevoel
+        icon: mdi:weather-hazy
+        state: >
+          {% set dp = states('sensor.buiten_dauwpunt') | float(none) %}
+          {% if dp is none %}
+            onbekend
+          {% elif dp < 10 %}
+            fris
+          {% elif dp < 15 %}
+            comfortabel
+          {% elif dp < 18 %}
+            wat vochtig
+          {% elif dp < 20 %}
+            benauwd
+          {% else %}
+            echt broeierig
+          {% endif %}
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# --- Mobiel Thuis helpers ---
+input_select:
+  huis_modus:
+    name: Huis modus
+    options:
+      - Thuis
+      - Weg
+      - Nacht
+      - Vakantie
+      - Gasten
+    initial: Thuis
+    icon: mdi:home
+
+input_boolean:
+  wtw_auto:
+    name: WTW automatisch
+    icon: mdi:fan-auto
+  gasten_mode:
+    name: Gastenmodus
+    icon: mdi:account-group
+  stille_modus:
+    name: Stille modus
+    icon: mdi:volume-off
+  laadpaal_auto:
+    name: Laadpaal automatisch
+    icon: mdi:ev-station
+  beregening_auto:
+    name: Beregening automatisch
+    icon: mdi:sprinkler
+
+timer:
+  wtw_boost:
+    name: WTW boost timer
+    duration: "00:30:00"
+    icon: mdi:fan-plus
+
+lovelace:
+  dashboards:
+    lovelace-klimaat:
+      mode: yaml
+      title: Klimaat
+      icon: mdi:home-thermometer
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboard-klimaat.yaml
+    lovelace-mobiel-thuis:
+      mode: yaml
+      title: Mobiel Thuis
+      icon: mdi:home-heart
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboard-mobiel-thuis.yaml
+
+http:
+  server_port: 8443
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
