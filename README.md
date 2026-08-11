@@ -87,6 +87,26 @@ If the integration does not load or setup fails:
 - [docs/register_catalog_v1.csv](docs/register_catalog_v1.csv)
 - [docs/cutover_runbook.md](docs/cutover_runbook.md)
 
+## Maintainer
+
+- Remco van Noorloos
+- GitHub: [@remcovn](https://github.com/remcovn)
+
+## Attribution Request
+
+If you reuse or adapt this project, please keep visible credit to the original author:
+
+- Remco van Noorloos
+- Repository: `https://github.com/remcovn/ha-sprsun-modbus`
+
+At minimum, keep copyright and license notices intact in source distributions.
+
+## License
+
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0).
+
+See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.
+
 ## Disclaimer
 
 This is a community project. Use it at your own risk.
