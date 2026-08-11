@@ -39,10 +39,11 @@ class SprsunModbusApi:
         async with self._lock:
             await self._async_ensure_connected()
 
-            try:
-                response = await self._client.read_holding_registers(address=address, count=count, slave=self._slave)
-            except TypeError:
-                response = await self._client.read_holding_registers(address=address, count=count, device_id=self._slave)
+            response = await self._client.read_holding_registers(
+                address=address,
+                count=count,
+                device_id=self._slave,
+            )
 
             if response.isError():
                 raise RuntimeError(f"Modbus read failed at address {address}, count {count}: {response}")
@@ -58,10 +59,11 @@ class SprsunModbusApi:
             await self._async_ensure_connected()
 
             _LOGGER.debug("Writing register %s=%s", address, value)
-            try:
-                response = await self._client.write_register(address=address, value=value, slave=self._slave)
-            except TypeError:
-                response = await self._client.write_register(address=address, value=value, device_id=self._slave)
+            response = await self._client.write_register(
+                address=address,
+                value=value,
+                device_id=self._slave,
+            )
 
             if response.isError():
                 raise RuntimeError(f"Modbus write failed at address {address} value {value}: {response}")

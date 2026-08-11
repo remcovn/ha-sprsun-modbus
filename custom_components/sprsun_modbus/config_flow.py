@@ -46,7 +46,7 @@ class SprsunModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> "SprsunModbusOptionsFlow":
         """Return the options flow for this handler."""
-        return SprsunModbusOptionsFlow(config_entry)
+        return SprsunModbusOptionsFlow()
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> dict[str, Any]:
         """Handle the initial step."""
@@ -66,9 +66,7 @@ class SprsunModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class SprsunModbusOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for SPRSUN Modbus."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
-
+    # HA sets self.config_entry itself (read-only property); do NOT override __init__.
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> dict[str, Any]:
         """Manage the integration options."""
         if user_input is not None:
