@@ -20,6 +20,16 @@ class SensorRegister:
 
 
 @dataclass(frozen=True)
+class BinarySensorRegister:
+    """Definition for a read-only bit in a status register."""
+
+    key: str
+    name: str
+    address: int
+    bitmask: int
+
+
+@dataclass(frozen=True)
 class WritableNumberRegister:
     """Definition for writable number register entities."""
 
@@ -34,6 +44,7 @@ class WritableNumberRegister:
 
 
 POLL_INTERVAL_BY_ADDRESS: dict[int, int] = {
+    3: 15,
     14: 15,
     15: 15,
     17: 15,
@@ -199,6 +210,16 @@ SENSOR_REGISTERS: tuple[SensorRegister, ...] = (
     SensorRegister("heat_upper_limit_setpoint_f54", "Heat Upper Limit Setpoint (F54)", 440, precision=0, unit="°C"),
     SensorRegister("cool_lower_limit_setpoint_f55", "Cool Lower Limit Setpoint (F55)", 441, precision=0, unit="°C"),
     SensorRegister("model_selection_f56", "Model Selection (F56)", 442, precision=0, state_class=None),
+)
+
+
+WORKING_STATUS_REGISTER = 3
+
+BINARY_SENSOR_REGISTERS: tuple[BinarySensorRegister, ...] = (
+    BinarySensorRegister("hot_water_demand", "Hot Water Demand", WORKING_STATUS_REGISTER, 0x0001),
+    BinarySensorRegister("heating_demand", "Heating Demand", WORKING_STATUS_REGISTER, 0x0002),
+    BinarySensorRegister("legionella_program", "Legionella Program", WORKING_STATUS_REGISTER, 0x0010),
+    BinarySensorRegister("defrost_cycle", "Defrost Cycle", WORKING_STATUS_REGISTER, 0x0080),
 )
 
 

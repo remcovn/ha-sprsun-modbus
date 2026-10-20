@@ -1,7 +1,7 @@
 """Constants for the SPRSUN Modbus integration."""
 
 DOMAIN = "sprsun_modbus"
-PLATFORMS = ["sensor", "number", "select"]
+PLATFORMS = ["sensor", "binary_sensor", "number", "select"]
 
 CONF_HOST = "host"
 CONF_PORT = "port"

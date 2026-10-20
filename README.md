@@ -22,6 +22,7 @@ Always validate register behavior on your own unit before relying on write opera
 ## What This Integration Provides
 
 - Sensor entities for temperatures, pressures, power, fan speeds, status fields, and controller parameters
+- Binary sensors for hot-water demand, heating demand, legionella program, and defrost status
 - Number entities for writable setpoints, temperature deltas, and the G03 start interval
 - Select entity for unit mode control
 - Config flow in Home Assistant UI (no YAML required)
@@ -62,6 +63,19 @@ The `SPRSUN Start Interval (G03)` number entity reads and writes register 389
 in whole minutes, with a range of 1-60 minutes. The existing `Start Internal (G03)`
 sensor remains available for dashboards and automations. After updating, reload
 the integration or restart Home Assistant to add the new control.
+
+## Working Status Mark
+
+The integration reads holding register `0x0003` (decimal address `3`) and exposes
+the documented status bits as read-only binary sensors:
+
+- Bit 0: Hot Water Demand
+- Bit 1: Heating Demand
+- Bit 4: Legionella Program
+- Bit 7: Defrost Cycle
+
+Register behavior can vary by controller model and firmware; validate these
+statuses on your own unit.
 
 ## Typical Connection Notes (Elfin EW11)
 

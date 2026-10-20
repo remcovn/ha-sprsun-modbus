@@ -23,7 +23,11 @@ from .const import (
 )
 from .coordinator import SprsunDataCoordinator
 from .modbus_api import SprsunModbusApi
-from .register_definitions import SENSOR_REGISTERS, WRITABLE_NUMBER_REGISTERS
+from .register_definitions import (
+    BINARY_SENSOR_REGISTERS,
+    SENSOR_REGISTERS,
+    WRITABLE_NUMBER_REGISTERS,
+)
 
 
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
@@ -48,6 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     api = SprsunModbusApi(host=host, port=int(port), slave=int(slave))
 
     all_addresses = [definition.address for definition in SENSOR_REGISTERS]
+    all_addresses.extend(definition.address for definition in BINARY_SENSOR_REGISTERS)
     all_addresses.extend(definition.address for definition in WRITABLE_NUMBER_REGISTERS)
 
     coordinator = SprsunDataCoordinator(
