@@ -263,6 +263,16 @@ WRITABLE_NUMBER_REGISTERS: tuple[WritableNumberRegister, ...] = (
         unit="°C",
         write_scale=1,
     ),
+    WritableNumberRegister(
+        key="sprsun_start_interval_g03",
+        name="SPRSUN Start Interval (G03)",
+        address=389,
+        min_value=1,
+        max_value=60,
+        step=1,
+        unit="min",
+        write_scale=1,
+    ),
 )
 
 

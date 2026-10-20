@@ -22,7 +22,7 @@ Always validate register behavior on your own unit before relying on write opera
 ## What This Integration Provides
 
 - Sensor entities for temperatures, pressures, power, fan speeds, status fields, and controller parameters
-- Number entities for writable setpoints and temperature deltas
+- Number entities for writable setpoints, temperature deltas, and the G03 start interval
 - Select entity for unit mode control
 - Config flow in Home Assistant UI (no YAML required)
 - Polling profiles (`fast`, `balanced`, `conservative`)
@@ -55,6 +55,13 @@ During setup, you will provide:
 - Slave ID
 - Base polling interval (seconds)
 - Polling profile (`fast`, `balanced`, `conservative`)
+
+## G03 Start Interval
+
+The `SPRSUN Start Interval (G03)` number entity reads and writes register 389
+in whole minutes, with a range of 1-60 minutes. The existing `Start Internal (G03)`
+sensor remains available for dashboards and automations. After updating, reload
+the integration or restart Home Assistant to add the new control.
 
 ## Typical Connection Notes (Elfin EW11)
 

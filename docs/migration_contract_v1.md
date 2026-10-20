@@ -10,6 +10,7 @@
   - 198 Heat Delta Temp
   - 199 AC Constant Temp Diff
   - 200 Hot Water Delta Temp
+  - 389 Start Interval (G03), 1-60 minuten in stappen van 1 minuut (schaalfactor x1)
   - 54 Unit Mode (P06)
 - Vervanging van package-helpers (input_number/input_select + automations) door integratie-native entities/services.
 

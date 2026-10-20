@@ -1,7 +1,7 @@
 {
   "domain": "sprsun_modbus",
   "name": "SPRSUN Modbus",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "documentation": "https://github.com/remcovn/ha-sprsun-modbus",
   "issue_tracker": "https://github.com/remcovn/ha-sprsun-modbus/issues",
   "codeowners": ["@remcovn"],

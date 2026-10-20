@@ -43,7 +43,7 @@
 "Comp Delay (G06)","386","int16","1","min","60","","measurement","no","","",""
 "Hot Water Heater Ext (G07)","387","int16","1","°C","60","","measurement","no","","",""
 "Heating Heater Ext (G05)","388","int16","1","°C","60","","measurement","no","","",""
-"Start Internal (G03)","389","int16","1","min","60","","measurement","no","","",""
+"Start Internal (G03)","389","int16","1","min","60","","measurement","yes","x1","number.sprsun_start_interval_g03","Range 1-60 min; step 1 min; existing sensor retained"
 "DC Pump Mode (F13)","390","int16","1","","30","","","no","","",""
 "DC Pump Cycle (F14)","391","int16","1","s","30","","measurement","no","","",""
 "DC Pump Freq Set (F15)","392","int16","1","%","30","","measurement","no","","",""
