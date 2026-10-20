@@ -1,0 +1,56 @@
+name: Publish HACS release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hacs-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and upload HACS package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Build HACS archive with release version
+        shell: python
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          import json
+          import os
+          from pathlib import Path
+          import re
+          import shutil
+          import sys
+
+          version = os.environ["RELEASE_TAG"].removeprefix("v")
+          if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?", version):
+              sys.exit("::error::Release tag must be a version such as v1.2.3 or v1.2.3-beta.1.")
+
+          integration = Path("custom_components/sprsun_modbus")
+          manifest_path = integration / "manifest.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          manifest["version"] = version
+          manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+          for filename in ("LICENSE", "NOTICE"):
+              shutil.copyfile(filename, integration / filename)
+          shutil.make_archive("sprsun_modbus", "zip", integration)
+
+      - name: Upload archive to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" sprsun_modbus.zip --clobber

@@ -47,6 +47,36 @@ Always validate register behavior on your own unit before relying on write opera
 6. Go to Settings > Devices & Services > Add Integration.
 7. Select `SPRSUN Modbus` and complete setup.
 
+## Publishing Releases
+
+HACS discovers GitHub releases automatically; there is no separate upload to HACS.
+The [release workflow](.github/workflows/release.yml) prepares the download:
+
+1. Merge the integration changes and release workflow into the default branch.
+2. Create and publish a GitHub release with a new version tag, such as `v0.2.4`
+   or `0.2.4`, targeting the commit you want to release.
+3. Wait for the `Publish HACS release` workflow to succeed. It attaches
+   `sprsun_modbus.zip` to the release, containing the integration files at the
+   archive root, along with the license and notice.
+4. HACS users will see the release on their next update check. They still need
+   to install the update and restart Home Assistant.
+
+The workflow sets the packaged `manifest.json` version from the tag, removing an
+optional leading `v`. No manual version bump is needed for HACS release packages;
+the manifest in Git remains unchanged. Default-branch installations still use
+the checked-in manifest version.
+
+Draft releases do not trigger packaging until published. Prerelease tags such
+as `v0.3.0-beta.1` are supported; mark those releases as prereleases in GitHub
+and enable beta versions in HACS to test them. Publishing a tag alone does not
+trigger the workflow.
+
+The workflow uses GitHub's built-in token with `contents: write`; no additional
+secret or HACS token is required. If uploading fails, rerun the workflow from
+GitHub Actions; the existing ZIP asset is replaced. Existing releases are not
+packaged retroactively. This does not submit the repository to the default HACS
+catalog; users can continue adding it as a custom repository.
+
 ## Configuration Fields
 
 During setup, you will provide:
