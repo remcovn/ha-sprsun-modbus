@@ -1,5 +1,11 @@
 # SPRSUN Modbus Integration for Home Assistant
 
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5?logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=remcovn&repository=ha-sprsun-modbus&category=integration)
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/remcovn/ha-sprsun-modbus)](https://github.com/remcovn/ha-sprsun-modbus/releases/latest)
+[![HACS and Hassfest validation](https://github.com/remcovn/ha-sprsun-modbus/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/remcovn/ha-sprsun-modbus/actions/workflows/validate.yml)
+[![Release packaging](https://github.com/remcovn/ha-sprsun-modbus/actions/workflows/release.yml/badge.svg)](https://github.com/remcovn/ha-sprsun-modbus/actions/workflows/release.yml)
+
 This custom integration allows you to read and control an SPRSUN heat pump from Home Assistant over Modbus TCP.
 
 It is designed for users who want local polling, Home Assistant entities, and direct control of key setpoints and operating mode.
@@ -46,6 +52,18 @@ Always validate register behavior on your own unit before relying on write opera
 5. Restart Home Assistant.
 6. Go to Settings > Devices & Services > Add Integration.
 7. Select `SPRSUN Modbus` and complete setup.
+
+## Validation
+
+The [validation workflow](.github/workflows/validate.yml) runs HACS validation
+and Hassfest as separate jobs on every push and pull request. It can also be
+started manually from the GitHub Actions tab. No additional secrets or HACS
+catalog membership are required.
+
+No HACS checks are ignored. Until brand assets are added, the HACS brand check
+is expected to fail. Add `custom_components/sprsun_modbus/brand/icon.png` before
+submitting the integration to the default HACS catalog. Both checks must pass
+before publishing the release used for that submission.
 
 ## Publishing Releases
 
