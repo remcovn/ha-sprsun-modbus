@@ -60,10 +60,10 @@ and Hassfest as separate jobs on every push and pull request. It can also be
 started manually from the GitHub Actions tab. No additional secrets or HACS
 catalog membership are required.
 
-No HACS checks are ignored. Until brand assets are added, the HACS brand check
-is expected to fail. Add `custom_components/sprsun_modbus/brand/icon.png` before
-submitting the integration to the default HACS catalog. Both checks must pass
-before publishing the release used for that submission.
+No HACS checks are ignored. The integration includes an original heat pump icon
+in `custom_components/sprsun_modbus/brand/icon.png` for HACS brand validation
+and local display in Home Assistant 2026.3 and newer. Both checks must pass
+before publishing the release used for submission to the default HACS catalog.
 
 ## Publishing Releases
 

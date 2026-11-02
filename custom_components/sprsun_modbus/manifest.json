@@ -1,6 +1,7 @@
 {
   "domain": "sprsun_modbus",
   "name": "SPRSUN Modbus",
+  "categories": ["climate.heat_pumps_air_conditioning"],
   "codeowners": ["@remcovn"],
   "config_flow": true,
   "documentation": "https://github.com/remcovn/ha-sprsun-modbus",
