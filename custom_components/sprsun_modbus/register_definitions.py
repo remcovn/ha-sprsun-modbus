@@ -142,9 +142,14 @@ SENSOR_REGISTERS: tuple[SensorRegister, ...] = (
     SensorRegister("exhaust_temperature", "Exhaust Temperature", 27, scale=1.0, precision=0, unit="°C", device_class="temperature"),
     SensorRegister("eev1_opening_step", "EEV1 Opening Step", 28, precision=0),
     SensorRegister("compressor_frequency", "Compressor Frequency", 30, precision=0, unit="Hz"),
-    SensorRegister("sprsun_input_power", "SPRSUN Input Power", 33, precision=0, unit="W", device_class="power"),
-    SensorRegister("sprsun_inverter_voltage", "SPRSUN Inverter Voltage", 34, precision=0, unit="V", device_class="voltage"),
-    SensorRegister("sprsun_inverter_current", "SPRSUN Inverter Current", 35, precision=0, unit="A", device_class="current"),
+    # Register 23 (0x17) is documented as input power but is "Invalid" on this
+    # firmware: it always reads 0, also with the compressor at 70 Hz. Registers
+    # 24-26 (0x18-0x1A) are "Invalid" as well. None of them are exposed; see
+    # the "Estimated Power" sensor for a model-based alternative.
+    SensorRegister("dc_bus_voltage", "DC Bus Voltage", 33, precision=0, unit="V", device_class="voltage"),
+    SensorRegister("driver_temperature", "Inverter Driver Temperature", 34, scale=0.5, precision=1, unit="°C", device_class="temperature"),
+    # Whole amperes, compressor only (not the total current drawn by the unit).
+    SensorRegister("compressor_current", "Compressor Current", 35, precision=0, unit="A", device_class="current"),
     SensorRegister("compressor_target_frequency", "Compressor Target Frequency", 36, precision=0, unit="Hz"),
     SensorRegister("dc_fan_1_speed", "DC Fan 1 Speed", 38, precision=0, unit="rpm"),
     SensorRegister("dc_fan_2_speed", "DC Fan 2 Speed", 39, precision=0, unit="rpm"),
@@ -210,6 +215,15 @@ SENSOR_REGISTERS: tuple[SensorRegister, ...] = (
     SensorRegister("heat_upper_limit_setpoint_f54", "Heat Upper Limit Setpoint (F54)", 440, precision=0, unit="°C"),
     SensorRegister("cool_lower_limit_setpoint_f55", "Cool Lower Limit Setpoint (F55)", 441, precision=0, unit="°C"),
     SensorRegister("model_selection_f56", "Model Selection (F56)", 442, precision=0, state_class=None),
+)
+
+
+# Sensor keys from earlier versions that had the wrong meaning; their entities
+# are removed from the entity registry by the config entry migration.
+REMOVED_SENSOR_KEYS: tuple[str, ...] = (
+    "sprsun_input_power",
+    "sprsun_inverter_voltage",
+    "sprsun_inverter_current",
 )
 
 

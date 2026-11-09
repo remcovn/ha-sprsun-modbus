@@ -18,13 +18,17 @@
     "step": {
       "init": {
         "title": "SPRSUN Modbus opties",
-        "description": "Pas verbinding en polling-gedrag aan.",
+        "description": "Pas verbinding en polling-gedrag aan, en de co?ffici?nten van het model voor Geschat vermogen (een schatting, geen meting).",
         "data": {
           "host": "Host of IP-adres",
           "port": "Poort",
           "slave": "Slave ID",
           "scan_interval": "Basis polling-interval (seconden)",
-          "profile": "Polling-profiel"
+          "profile": "Polling-profiel",
+          "est_standby_w": "Geschat vermogen: standby (W)",
+          "est_compressor_base_w": "Geschat vermogen: basislast compressor (W)",
+          "est_compressor_w_per_hz": "Geschat vermogen: compressor W per Hz",
+          "est_pump_w_per_pct": "Geschat vermogen: circulatiepomp W per % PWM"
         }
       }
     }

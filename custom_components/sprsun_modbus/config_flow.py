@@ -11,7 +11,15 @@ from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
 from homeassistant.core import callback
 
 from .const import (
+    CONF_EST_COMPRESSOR_BASE_W,
+    CONF_EST_COMPRESSOR_W_PER_HZ,
+    CONF_EST_PUMP_W_PER_PCT,
+    CONF_EST_STANDBY_W,
     CONF_PROFILE,
+    DEFAULT_EST_COMPRESSOR_BASE_W,
+    DEFAULT_EST_COMPRESSOR_W_PER_HZ,
+    DEFAULT_EST_PUMP_W_PER_PCT,
+    DEFAULT_EST_STANDBY_W,
     DEFAULT_PORT,
     DEFAULT_PROFILE,
     DEFAULT_SCAN_INTERVAL,
@@ -41,6 +49,7 @@ class SprsunModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for SPRSUN Modbus."""
 
     VERSION = 1
+    MINOR_VERSION = 2
 
     @staticmethod
     @callback
@@ -86,6 +95,13 @@ class SprsunModbusOptionsFlow(config_entries.OptionsFlow):
             CONF_PROFILE,
             self.config_entry.data.get(CONF_PROFILE, DEFAULT_PROFILE),
         )
+        options = self.config_entry.options
+        estimate_fields = (
+            (CONF_EST_STANDBY_W, DEFAULT_EST_STANDBY_W, 1000.0),
+            (CONF_EST_COMPRESSOR_BASE_W, DEFAULT_EST_COMPRESSOR_BASE_W, 5000.0),
+            (CONF_EST_COMPRESSOR_W_PER_HZ, DEFAULT_EST_COMPRESSOR_W_PER_HZ, 500.0),
+            (CONF_EST_PUMP_W_PER_PCT, DEFAULT_EST_PUMP_W_PER_PCT, 50.0),
+        )
 
         schema = vol.Schema(
             {
@@ -97,6 +113,13 @@ class SprsunModbusOptionsFlow(config_entries.OptionsFlow):
                     vol.Range(min=5, max=3600),
                 ),
                 vol.Required(CONF_PROFILE, default=current_profile): vol.In(PROFILE_OPTIONS),
+                **{
+                    vol.Required(key, default=options.get(key, default)): vol.All(
+                        vol.Coerce(float),
+                        vol.Range(min=0, max=maximum),
+                    )
+                    for key, default, maximum in estimate_fields
+                },
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)

@@ -230,23 +230,11 @@ modbus:
         state_class: measurement
         scan_interval: 15
 
-      # Inverter electrical telemetry.
-      # Direct Modbus read showed 333+ is static on this unit; 33-35 are dynamic.
-      - name: SPRSUN Input Power
+      # Inverter telemetry.
+      # Register 23 (input power) is Invalid on this firmware and always reads 0.
+      - name: DC Bus Voltage
         slave: 1
         address: 33
-        input_type: holding
-        data_type: int16
-        scale: 1
-        precision: 0
-        unit_of_measurement: "W"
-        device_class: power
-        state_class: measurement
-        scan_interval: 15
-
-      - name: SPRSUN Inverter Voltage
-        slave: 1
-        address: 34
         input_type: holding
         data_type: int16
         scale: 1
@@ -256,7 +244,20 @@ modbus:
         state_class: measurement
         scan_interval: 15
 
-      - name: SPRSUN Inverter Current
+      - name: Inverter Driver Temperature
+        slave: 1
+        address: 34
+        input_type: holding
+        data_type: int16
+        scale: 0.5
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 15
+
+      # Whole amperes, compressor only (not total unit current).
+      - name: Compressor Current
         slave: 1
         address: 35
         input_type: holding

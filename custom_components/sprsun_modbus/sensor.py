@@ -4,14 +4,34 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import UnitOfPower
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DATA_COORDINATOR, DOMAIN, REG_UNIT_MODE
+from .const import (
+    CONF_EST_COMPRESSOR_BASE_W,
+    CONF_EST_COMPRESSOR_W_PER_HZ,
+    CONF_EST_PUMP_W_PER_PCT,
+    CONF_EST_STANDBY_W,
+    DATA_COORDINATOR,
+    DEFAULT_EST_COMPRESSOR_BASE_W,
+    DEFAULT_EST_COMPRESSOR_W_PER_HZ,
+    DEFAULT_EST_PUMP_W_PER_PCT,
+    DEFAULT_EST_STANDBY_W,
+    DOMAIN,
+    REG_COMPRESSOR_FREQUENCY,
+    REG_PUMP_PWM,
+    REG_UNIT_MODE,
+)
 from .coordinator import SprsunDataCoordinator
 from .register_definitions import OPTION_BY_UNIT_MODE, SENSOR_REGISTERS
 
@@ -113,6 +133,70 @@ class SprsunUnitModeTextSensor(CoordinatorEntity[SprsunDataCoordinator], SensorE
         return OPTION_BY_UNIT_MODE.get(raw, f"Unknown ({raw})")
 
 
+class SprsunEstimatedPowerSensor(CoordinatorEntity[SprsunDataCoordinator], SensorEntity):
+    """Modelled electrical power; the heat pump has no usable power register."""
+
+    _attr_name = "Estimated Power"
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.WATT
+    _attr_icon = "mdi:flash-triangle-outline"
+    _unrecorded_attributes = frozenset(
+        {
+            "estimated",
+            "model",
+            "standby_w",
+            "compressor_base_w",
+            "compressor_w_per_hz",
+            "pump_w_per_pct",
+        }
+    )
+
+    def __init__(self, coordinator: SprsunDataCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator)
+        self._entry = entry
+        self._attr_unique_id = f"{entry.entry_id}_estimated_power"
+        options = entry.options
+        self._standby_w = float(options.get(CONF_EST_STANDBY_W, DEFAULT_EST_STANDBY_W))
+        self._compressor_base_w = float(options.get(CONF_EST_COMPRESSOR_BASE_W, DEFAULT_EST_COMPRESSOR_BASE_W))
+        self._compressor_w_per_hz = float(
+            options.get(CONF_EST_COMPRESSOR_W_PER_HZ, DEFAULT_EST_COMPRESSOR_W_PER_HZ)
+        )
+        self._pump_w_per_pct = float(options.get(CONF_EST_PUMP_W_PER_PCT, DEFAULT_EST_PUMP_W_PER_PCT))
+        self._attr_extra_state_attributes = {
+            "estimated": True,
+            "model": "standby + pump_w_per_pct * pump_pwm + (compressor_base_w + compressor_w_per_hz * frequency if frequency > 0)",
+            "standby_w": self._standby_w,
+            "compressor_base_w": self._compressor_base_w,
+            "compressor_w_per_hz": self._compressor_w_per_hz,
+            "pump_w_per_pct": self._pump_w_per_pct,
+        }
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device info for registry."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._entry.entry_id)},
+            name="SPRSUN Heat Pump",
+            manufacturer="SPRSUN",
+            model="Modbus Heat Pump",
+        )
+
+    @property
+    def native_value(self) -> float | None:
+        """Return estimated power from compressor frequency and pump PWM."""
+        frequency = self.coordinator.data.get(REG_COMPRESSOR_FREQUENCY)
+        pump_pwm = self.coordinator.data.get(REG_PUMP_PWM)
+        if frequency is None or pump_pwm is None:
+            return None
+
+        power = self._standby_w + self._pump_w_per_pct * max(0, pump_pwm)
+        if frequency > 0:
+            power += self._compressor_base_w + self._compressor_w_per_hz * frequency
+        return round(power)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -123,4 +207,5 @@ async def async_setup_entry(
 
     entities = [SprsunSensor(coordinator, entry, description) for description in SENSOR_DESCRIPTIONS]
     entities.append(SprsunUnitModeTextSensor(coordinator, entry))
+    entities.append(SprsunEstimatedPowerSensor(coordinator, entry))
     async_add_entities(entities)

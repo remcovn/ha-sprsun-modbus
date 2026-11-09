@@ -112,6 +112,43 @@ in whole minutes, with a range of 1-60 minutes. The existing `Start Internal (G0
 sensor remains available for dashboards and automations. After updating, reload
 the integration or restart Home Assistant to add the new control.
 
+## Inverter Telemetry and Estimated Power
+
+Registers 33-35 are exposed as:
+
+| Register | Entity | Scale | Unit |
+|---|---|---|---|
+| 33 (0x21) | DC Bus Voltage | 1 | V |
+| 34 (0x22) | Inverter Driver Temperature | 0.5 | °C |
+| 35 (0x23) | Compressor Current (whole amperes, compressor only) | 1 | A |
+
+The documented input power register 23 (0x17) always reads 0 on tested
+firmware and is not exposed. Instead, the `Estimated Power` sensor models the
+electrical power from compressor frequency (register 30) and pump PWM
+(register 46):
+
+```text
+standby + pump_w_per_pct × pump PWM + (compressor_base_w + compressor_w_per_hz × frequency, only when frequency > 0)
+```
+
+The defaults (30 W standby, 265 W + 25.4 W/Hz compressor, 0.69 W per % pump)
+were calibrated against a smart meter on a 1-phase 230 V unit. Adjust them in
+the integration options. This sensor is an estimate, not a measurement.
+
+## Changelog
+
+### 0.3.0
+
+- Register 33 is now `DC Bus Voltage` (was `SPRSUN Input Power`, W).
+- Register 34 is now `Inverter Driver Temperature`, scale 0.5, °C (was
+  `SPRSUN Inverter Voltage`, V).
+- Register 35 is now `Compressor Current` (was `SPRSUN Inverter Current`).
+- Added `Estimated Power` sensor with configurable model coefficients.
+- The three old sensor entities are removed automatically from the entity
+  registry when the integration loads. Their old long-term statistics remain
+  until you delete them in Developer tools > Statistics. Update dashboards and
+  automations that referenced the old entities.
+
 ## Working Status Mark
 
 The integration reads holding register `0x0003` (decimal address `3`) and exposes

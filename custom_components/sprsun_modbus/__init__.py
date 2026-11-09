@@ -5,6 +5,7 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import entity_registry as er
 
 from .const import (
     CONF_HOST,
@@ -25,9 +26,27 @@ from .coordinator import SprsunDataCoordinator
 from .modbus_api import SprsunModbusApi
 from .register_definitions import (
     BINARY_SENSOR_REGISTERS,
+    REMOVED_SENSOR_KEYS,
     SENSOR_REGISTERS,
     WRITABLE_NUMBER_REGISTERS,
 )
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate an old config entry."""
+    if entry.version > 1:
+        return False
+
+    if entry.minor_version < 2:
+        # 1.2: registers 33-35 were redefined under new keys; drop the old entities.
+        registry = er.async_get(hass)
+        for key in REMOVED_SENSOR_KEYS:
+            entity_id = registry.async_get_entity_id("sensor", DOMAIN, f"{entry.entry_id}_{key}")
+            if entity_id is not None:
+                registry.async_remove(entity_id)
+        hass.config_entries.async_update_entry(entry, minor_version=2)
+
+    return True
 
 
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
