@@ -1,0 +1,31 @@
+title: SPRSUN Modbus for Home Assistant
+description: >-
+  Home Assistant custom integration for SPRSUN heat pumps: local monitoring
+  and control over Modbus TCP (e.g. via an Elfin EW11), installable via HACS.
+url: https://remcovn.github.io
+baseurl: /ha-sprsun-modbus
+lang: en
+
+theme: jekyll-theme-cayman
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+author: Remco van Noorloos
+
+# Google Search Console verification (URL-prefix property):
+# paste the content value of Google's HTML-tag method here, e.g.
+# webmaster_verifications:
+#   google: abc123...
+
+# Internal migration notes: still published, but kept out of the sitemap.
+defaults:
+  - scope:
+      path: "cutover_runbook.md"
+    values:
+      sitemap: false
+  - scope:
+      path: "migration_contract_v1.md"
+    values:
+      sitemap: false
