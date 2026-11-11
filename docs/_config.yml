@@ -16,8 +16,8 @@ author: Remco van Noorloos
 
 # Google Search Console verification (URL-prefix property):
 # paste the content value of Google's HTML-tag method here, e.g.
-# webmaster_verifications:
-#   google: abc123...
+webmaster_verifications:
+  google: 9lb-AwTH4ZWnquXfC4wXRoBe0nOV0r1WdV89MrSmP1I
 
 # Internal migration notes: still published, but kept out of the sitemap.
 defaults:
